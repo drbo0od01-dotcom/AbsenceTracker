@@ -28,7 +28,8 @@
         // سحب البيانات مباشرة من ملف courses.json المرفوع على قيت هب
         async function loadCourses() {
             try {
-                const response = await fetch('courses.json?t=' + Date.now()); // منع التخزين المؤقت
+                const response = await fetch('https://raw.githubusercontent.com/drboo0ood01-dotcom/AbsenceTracker/main/courses.json?t=' + Date.now());
+
                 const courses = await response.json();
                 const coursesList = document.getElementById('courses-list');
                 coursesList.innerHTML = '';
