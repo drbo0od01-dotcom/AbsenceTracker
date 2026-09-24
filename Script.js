@@ -8,12 +8,10 @@ let courses = JSON.parse(localStorage.getItem('courses')) || [];
 form.addEventListener('submit', function(e) {
     e.preventDefault();
     const name = document.getElementById('course-name').value;
-    const max = parseInt(document.getElementById('max-absence').value);
 
     const newCourse = {
         id: Date.now(),
         name: name,
-        max: max,
         absent: 0
     };
 
@@ -35,20 +33,12 @@ function renderCourses() {
     }
 
     courses.forEach(course => {
-        const percentage = Math.round((course.absent / course.max) * 100) || 0;
-        let color = '#2ecc71'; // أخضر
-        if (percentage >= 50 && percentage < 75) color = '#f39c12'; // أصفر
-        if (percentage >= 75) color = '#e74c3c'; // أحمر
-
         const div = document.createElement('div');
         div.className = 'course-item';
         div.innerHTML = `
             <div class="course-info">
                 <strong>${course.name}</strong>
-                <span>الغياب: ${course.absent} / ${course.max} (${percentage}%)</span>
-            </div>
-            <div style="background: #ddd; border-radius: 4px; height: 8px; margin-bottom: 10px; overflow: hidden;">
-                <div style="background: ${color}; width: ${Math.min(percentage, 100)}%; height: 100%;"></div>
+                <span>إجمالي الغيابات: <strong>${course.absent}</strong></span>
             </div>
             <div class="actions">
                 <button class="btn-success" onclick="updateAbsence(${course.id}, 1)">+ غياب</button>
@@ -74,4 +64,3 @@ function deleteCourse(id) {
     courses = courses.filter(course => course.id !== id);
     saveAndRender();
 }
-
