@@ -5,208 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سجل الغيابات الجامعي</title>
     <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-            direction: rtl;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
-        .card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        button {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #2980b9;
-        }
-        .course-item {
-            background: #fafafa;
-            border: 1px solid #eee;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-        .course-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .badge {
-            background-color: #e0f2fe;
-            color: #0369a1;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        .badge-lab {
-            background-color: #fce7f3;
-            color: #be185d;
-        }
-        .actions {
-            display: flex;
-            gap: 5px;
-        }
-        .actions button {
-            width: auto;
-            padding: 6px 12px;
-            font-size: 14px;
-        }
-        .btn-danger { background-color: #e74c3c; }
-        .btn-danger:hover { background-color: #c0392b; }
-        .btn-success { background-color: #2ecc71; }
-        .btn-success:hover { background-color: #27ae60; }
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: #f4f6f9; color: #333; margin: 0; padding: 20px; direction: rtl; }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 { text-align: center; color: #2c3e50; }
+        .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .course-item { background: #fafafa; border: 1px solid #eee; padding: 12px; border-radius: 8px; margin-top: 10px; }
+        .course-info { display: flex; justify-content: space-between; align-items: center; }
+        .badge { background-color: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .badge-lab { background-color: #fce7f3; color: #be185d; }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>سجل الغيابات الجامعي 📚</h1>
-
-        <!-- نموذج لإضافة مادة جديدة مع خيار محاضرة أو لاب -->
-        <div class="card">
-            <h3>إضافة مادة أو لاب جديد</h3>
-            <form id="course-form">
-                <input type="text" id="course-name" placeholder="اسم المادة (مثال: فسيولوجي)" required>
-                <select id="course-type">
-                    <option value="محاضرة">محاضرة (Lecture)</option>
-                    <option value="لاب">لاب (Lab)</option>
-                </select>
-                <button type="submit">إضافة للقائمة</button>
-            </form>
-        </div>
-
-        <!-- قائمة المقررات -->
         <div class="card">
             <h3>مقرراتي الدراسية</h3>
-            <div id="courses-list">
-                <!-- سيتم تعبئة المواد هنا برمجياً -->
-            </div>
+            <div id="courses-list">جاري تحميل البيانات...</div>
         </div>
     </div>
 
     <script>
-        let courses = JSON.parse(localStorage.getItem('courses')) || [];
-
-        document.addEventListener('DOMContentLoaded', function() {
-            renderCourses();
-
-            const form = document.getElementById('course-form');
-            if (form) {
-                form.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const nameInput = document.getElementById('course-name');
-                    const typeInput = document.getElementById('course-type');
-                    
-                    const name = nameInput.value.trim();
-                    const type = typeInput.value;
-
-                    if (name === '') return;
-
-                    const newCourse = {
-                        id: Date.now(),
-                        name: name,
-                        type: type,
-                        absent: 0
-                    };
-
-                    courses.push(newCourse);
-                    saveAndRender();
-                    nameInput.value = '';
-                });
-            }
-        });
-
-        function saveAndRender() {
+        // سحب البيانات مباشرة من ملف courses.json المرفوع على قيت هب
+        async function loadCourses() {
             try {
-                localStorage.setItem('courses', JSON.stringify(courses));
-            } catch (e) {
-                console.log('Local storage error:', e);
-            }
-            renderCourses();
-        }
+                const response = await fetch('courses.json?t=' + Date.now()); // منع التخزين المؤقت
+                const courses = await response.json();
+                const coursesList = document.getElementById('courses-list');
+                coursesList.innerHTML = '';
 
-        function renderCourses() {
-            const coursesList = document.getElementById('courses-list');
-            if (!coursesList) return;
-
-            coursesList.innerHTML = '';
-            
-            if (courses.length === 0) {
-                coursesList.innerHTML = '<p style="text-align: center; color: #888; padding: 10px;">لا توجد مقررات مضافة حالياً.</p>';
-                return;
-            }
-
-            courses.forEach(course => {
-                const badgeClass = course.type === 'لاب' ? 'badge badge-lab' : 'badge';
-                const div = document.createElement('div');
-                div.className = 'course-item';
-                div.innerHTML = `
-                    <div class="course-info">
-                        <div>
-                            <strong>${course.name}</strong>
-                            <span class="${badgeClass}">${course.type}</span>
-                        </div>
-                        <span>إجمالي الغيابات: <strong>${course.absent}</strong></span>
-                    </div>
-                    <div class="actions" style="margin-top: 10px; display: flex; gap: 5px;">
-                        <button type="button" class="btn-success" onclick="updateAbsence(${course.id}, 1)">+ غياب</button>
-                        <button type="button" onclick="updateAbsence(${course.id}, -1)">- إزالة غياب</button>
-                        <button type="button" class="btn-danger" onclick="deleteCourse(${course.id})">حذف</button>
-                    </div>
-                `;
-                coursesList.appendChild(div);
-            });
-        }
-
-        function updateAbsence(id, val) {
-            courses = courses.map(course => {
-                if (course.id === id) {
-                    course.absent = Math.max(0, course.absent + val);
+                if (courses.length === 0) {
+                    coursesList.innerHTML = '<p style="text-align: center; color: #888;">لا توجد مقررات مضافة.</p>';
+                    return;
                 }
-                return course;
-            });
-            saveAndRender();
-        }
 
-        function deleteCourse(id) {
-            courses = courses.filter(course => course.id !== id);
-            saveAndRender();
+                courses.forEach(course => {
+                    const badgeClass = course.type === 'لاب' ? 'badge badge-lab' : 'badge';
+                    const div = document.createElement('div');
+                    div.className = 'course-item';
+                    div.innerHTML = `
+                        <div class="course-info">
+                            <div>
+                                <strong>${course.name}</strong>
+                                <span class="${badgeClass}">${course.type}</span>
+                            </div>
+                            <span>إجمالي الغيابات: <strong>${course.absent}</strong></span>
+                        </div>
+                    `;
+                    coursesList.appendChild(div);
+                });
+            } catch (e) {
+                document.getElementById('courses-list').innerHTML = '<p style="text-align: center; color: red;">فشل تحميل البيانات.</p>';
+            }
         }
+        loadCourses();
     </script>
 </body>
 </html>
