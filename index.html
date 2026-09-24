@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تتبع الغيابات الجامعية</title>
+    <title>سجل الغيابات الجامعي</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,17 +11,16 @@
     <div class="container">
         <h1>سجل الغيابات الجامعي 📚</h1>
 
-        <!-- نموذج لإضافة مادة جديدة -->
+        <!-- نموذج لإضافة مادة جديدة (بدون حد أعلى) -->
         <div class="card">
             <h3>إضافة مادة جديدة</h3>
             <form id="course-form">
                 <input type="text" id="course-name" placeholder="اسم المادة (مثال: فسيولوجي)" required>
-                <input type="number" id="max-absence" placeholder="الحد الأقصى للغياب بالساعات/المرات" required>
                 <button type="submit">إضافة المادة</button>
             </form>
         </div>
 
-        <!-- قائمة المواد والإحصائيات -->
+        <!-- قائمة المواد والغيابات -->
         <div class="card">
             <h3>مقرراتي الدراسية</h3>
             <div id="courses-list">
@@ -33,4 +32,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
