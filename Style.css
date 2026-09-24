@@ -61,18 +61,21 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.actions {
+    display: flex;
+    gap: 5px;
 }
 
 .actions button {
     width: auto;
-    padding: 5px 10px;
+    padding: 6px 12px;
     font-size: 14px;
-    margin-left: 5px;
 }
 
 .btn-danger { background-color: #e74c3c; }
 .btn-danger:hover { background-color: #c0392b; }
 .btn-success { background-color: #2ecc71; }
 .btn-success:hover { background-color: #27ae60; }
-
